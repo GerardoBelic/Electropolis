@@ -269,7 +269,14 @@ public class SelectionPanelManager : MonoBehaviour
 
     private void open_selection_panel()
     {
+        /// TODO: force rebuild on parents of layout groups so that they are shown correclty
         selection_panel.SetActive(true);
+        //LayoutRebuilder.ForceRebuildLayoutImmediate(selection_panel.GetComponent<RectTransform>());
+    }
+
+    public void close_selection_panel()
+    {
+        selection_panel.SetActive(false);
     }
 
     private void hide_all_groups()
@@ -375,6 +382,19 @@ public class SelectionPanelManager : MonoBehaviour
     public void element_selected_callback(GameObject element_selected)
     {
         /// TODO: do something with the element
+        SelectionPanelButtonInfo button_info = element_selected.GetComponent<SelectionPanelButtonInfo>();
+
+        if (button_info == null)
+        {
+            Debug.LogError("Element selected has no button info (SelectionPanelButtonInfo)");
+        }
+
+        ConstructionInfo construction_info = button_info.get_construction_info();
+
+        print(construction_info.name);
+
+        close_selection_panel();
+
     }
 
     #endregion

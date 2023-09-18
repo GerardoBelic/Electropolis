@@ -1,0 +1,111 @@
+{
+    "name": "Construction Controls",
+    "maps": [
+        {
+            "name": "Select Construction Mode",
+            "id": "413e64ba-8ee5-4a20-b40c-d2f27edf6c2c",
+            "actions": [
+                {
+                    "name": "None Selected",
+                    "type": "Button",
+                    "id": "3b6f4c14-0dca-46e2-b801-04149a52fb9c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Block Placement",
+                    "type": "Button",
+                    "id": "662c872f-5325-454f-a251-991efdecd622",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Zone Painting",
+                    "type": "Button",
+                    "id": "d9b784d0-5e2e-4881-9c99-564c81623637",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Road Placement",
+                    "type": "Button",
+                    "id": "ea36d6de-a90c-49d8-9db2-f4f675991431",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "cb4f79fb-cdbe-4b5f-940e-18b5e2b97574",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "Block Placement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0029f2a8-2c7e-46cb-860b-c9a6f8c95256",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "Zone Painting",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0546acee-67af-4e94-9c0b-ff7ea4582e73",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "Road Placement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e83db441-d074-4ee7-840c-0e545cefd690",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "None Selected",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "K&M",
+            "bindingGroup": "K&M",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}

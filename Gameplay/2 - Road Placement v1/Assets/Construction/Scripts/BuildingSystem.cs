@@ -375,6 +375,8 @@ public class BuildingSystem : MonoBehaviour
 
     #region Road placement
 
+    public RoadNetwork road_network;
+
     private enum Road_Direction
     {
         Left,
@@ -383,13 +385,13 @@ public class BuildingSystem : MonoBehaviour
     private Road_Direction current_road_direction = Road_Direction.Left;
 
     private Vector3Int initial_road_spot = Vector3Int.back;
-    private Vector3Int final_road_spot = Vector3Int.back;
+    //private Vector3Int final_road_spot = Vector3Int.back;
 
     public void road_placement(bool cancel_operation = false)
     {
         if (cancel_operation)
         {
-
+            initial_road_spot = Vector3Int.back;
         }
 
         /// a) Click on the initial road spot
@@ -410,19 +412,37 @@ public class BuildingSystem : MonoBehaviour
         if (initial_road_spot == Vector3Int.back)
             return;
 
-        select_road_in_tilemap();
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            if (current_road_direction == Road_Direction.Left)
+            {
+                current_road_direction = Road_Direction.Right;
+            }
+            else
+            {
+                current_road_direction = Road_Direction.Left;
+            }
+        }
+
+        place_road(current_road_direction, RoadNetwork.Road_Placement_Mode.Temporal);
 
         /// c) Click on the end road spot
+        if (Input.GetMouseButtonUp(0))
+        {
+            place_road(current_road_direction, RoadNetwork.Road_Placement_Mode.Permanent);
 
+            /// Clean the road mode
+            road_placement(true);
+        }
     }
 
     private class Road_Section
     {
-        Vector3Int road_begin = Vector3Int.back;
-        Vector3Int road_end = Vector3Int.back;
-        Road_Direction road_direction = Road_Direction.Left;
+        private Vector3Int road_begin = Vector3Int.back;
+        private Vector3Int road_end = Vector3Int.back;
+        private Road_Direction road_direction = Road_Direction.Left;
 
-        public Road_Section(Vector3Int _road_begin, Vector3Int _road_end, Road_Direction _road_direction)
+        public Road_Section(Vector3Int _road_begin, Vector3Int _road_end, Road_Direction _road_direction = Road_Direction.Left)
         {
             road_begin = _road_begin;
             road_end = _road_end;
@@ -441,7 +461,7 @@ public class BuildingSystem : MonoBehaviour
             Vector3Int second_section_begin = Vector3Int.back;
             Vector3Int second_section_end = Vector3Int.back;
 
-            List<Vector3Int> road_tiles;
+            List<Vector3Int> road_tiles = new List<Vector3Int>();
 
             /// If the road is straight
             if (road_begin.x == road_end.x)
@@ -471,43 +491,42 @@ public class BuildingSystem : MonoBehaviour
 
             /// In other case, the road has a turn
             Vector3Int corner_tile;
-            if (road_direction = Road_Direction.Left)
+            if (road_direction == Road_Direction.Left)
             {
-                if (road_begin.x < road_end.x)
-                {
-                    corner_tile = new Vector3Int(road_begin.x, road_end.y, 0);
-                }
-                else
-                {
-                    corner_tile = new Vector3Int(road_end.x, road_begin.y, 0);
-                }
+                corner_tile = new Vector3Int(road_begin.x, road_end.y, 0);
             }
             else
             {
-                if (road_begin.y < road_end.y)
-                {
-                    corner_tile = new Vector3Int(road_begin.x, road_end.y, 0);
-                }
-                else
-                {
-                    corner_tile = new Vector3Int(road_end.x, road_begin.y, 0);
-                }
+                corner_tile = new Vector3Int(road_end.x, road_begin.y, 0);
             }
             
+            /// Since there are two stright lines between the corner and the road begin/end, we call this function
+            /// again two times (and delete the corner tile from one of them so it's not repeated)
+            Road_Section section_begin_to_corner = new Road_Section(road_begin, corner_tile);
+            List<Vector3Int> road_tiles_begin_to_corner = section_begin_to_corner.get_road_tiles();
+
+            Road_Section section_end_to_corner = new Road_Section(corner_tile, road_end);
+            List<Vector3Int> road_tiles_end_to_corner = section_end_to_corner.get_road_tiles();
+            road_tiles_end_to_corner.Remove(corner_tile);
+            
+            road_tiles.AddRange(road_tiles_begin_to_corner);
+            road_tiles.AddRange(road_tiles_end_to_corner);
+           
+           return road_tiles;
 
         }
     }
 
-    private void select_road_in_tilemap()
+    private void place_road(Road_Direction direction, RoadNetwork.Road_Placement_Mode placement_mode)
     {
-        /// To mark the road area, we must first clear the previous selection (for now we use the selection tilemap)
-        selection_tilemap.GetComponent<TilemapController>().clear_all_tiles();
-
         /// The current mouse position is where the selection area must end
         Vector3Int current_road_spot = gridLayout.WorldToCell(GetMouseWorldPosition());
 
-        
+        Road_Section road_section = new Road_Section(initial_road_spot, current_road_spot, direction);
+
+        road_network.add_roads(road_section.get_road_tiles(), placement_mode);
     }
+
 
     #endregion
 
