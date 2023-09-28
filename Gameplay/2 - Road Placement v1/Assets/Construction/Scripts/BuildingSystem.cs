@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System;
+using UnityEngine.InputSystem;
 
 /**
 
@@ -45,9 +46,13 @@ public class BuildingSystem : MonoBehaviour
 
     public GridLayout gridLayout;
     private Grid grid;
+
     [SerializeField] public Tilemap MainTilemap;
+    [SerializeField] private TilemapController MainTilemap_controller;
     [SerializeField] private TileBase whiteTile;
+
     [SerializeField] private Tilemap selection_tilemap;
+    [SerializeField] private TilemapController selection_tilemap_controller;
     [SerializeField] private TileBase selection_tile;
 
     public GameObject prefab1;
@@ -55,16 +60,13 @@ public class BuildingSystem : MonoBehaviour
 
     private PlaceableObject objectToPlace;
 
-    private enum Construction_Modes
+    public enum Construction_Modes
     {
         None,
         Block_Placement,
         Zone_Painting,
         Road_Placement
     }
-
-    Construction_Modes current_construction_mode = Construction_Modes.None;
-    Construction_Modes previous_construction_mode = Construction_Modes.None;
 
     #region Unity methods
 
@@ -74,7 +76,7 @@ public class BuildingSystem : MonoBehaviour
         grid = gridLayout.gameObject.GetComponent<Grid>();
     }
 
-    private void Update()
+    /*private void Update()
     {
         /// TODO: instead of reading and comparing the strings, we should compare keycodes for performance
         string input = Input.inputString;
@@ -140,75 +142,105 @@ public class BuildingSystem : MonoBehaviour
 
         /// Update the previous mode
         previous_construction_mode = current_construction_mode;
+    }*/
+
+    #endregion
+
+    #region Construction mode selection
+
+    [SerializeField] private PlayerInputHandler input_handler;
+
+    private void exit_current_construction_mode()
+    {
+        input_handler.go_to_selection_mode();
     }
 
     #endregion
 
     #region Block placement
 
-    public void block_placement(bool cancel_operation = false)
+    private void restore_block_placement_mode()
     {
-        /// Default all variables
-        if (cancel_operation)
-        {
-            if (objectToPlace)
-            {
-                Destroy(objectToPlace.gameObject);
-                objectToPlace = null;
-            }
+        Destroy(objectToPlace.gameObject);
+        objectToPlace = null;
+    }
 
+    public void select_object_A()
+    {
+        /// 'objectToPlace' must be null to select a prefab
+        if (objectToPlace != null)
+        {
             return;
         }
 
-        /// a) Select block to place 
-        /// If there is not a object selected, we wait until the user selects one
-        if (!objectToPlace)
-        {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                InitializeWithObject(prefab1);
-            }
-            else if (Input.GetKeyDown(KeyCode.B))
-            {
-                InitializeWithObject(prefab2);
-            }
+        InitializeWithObject(prefab1);
+    }
 
+    public void select_object_B()
+    {
+        /// 'objectToPlace' must be null to select a prefab
+        if (objectToPlace != null)
+        {
             return;
         }
 
-        /// We can rotate the object 90º
-        if (Input.GetKeyDown(KeyCode.R))
+        InitializeWithObject(prefab2);
+    }
+
+    /// Rotate the object to be placed
+    public void rotate_object()
+    {
+        /// 'objectToPlace' must be not null
+        if (objectToPlace == null)
         {
-            objectToPlace.Rotate();
+            return;
         }
 
-        /// Make the position of the object permanent
-        else if (Input.GetKeyDown(KeyCode.Space))
-        {
-            /// Check if we can place the object (not occupying used space)
-            /// TODO: mark in a custom material the object to show if it can be put down
-            if (CanBePlaced(objectToPlace))
-            {
-                objectToPlace.Place();
-                Vector3Int start = gridLayout.WorldToCell(objectToPlace.GetStartPosition());
-                TakeArea(start, objectToPlace.Size);
+        objectToPlace.Rotate();
+    }
 
-                objectToPlace = null;
-            }
-            /// If the space is taken, we destroy the object
-            /// TODO: don't destory the object
-            else
-            {
-                Destroy(objectToPlace.gameObject);
-                objectToPlace = null;
-            }
-        }
-        /// Deselect the object to be placed
-        else if (Input.GetKeyDown(KeyCode.Escape))
+    /// Place the object on the map
+    public void place_object()
+    {
+        /// 'objectToPlace' must be not null
+        if (objectToPlace == null)
         {
-            Destroy(objectToPlace.gameObject);
+            return;
+        }
+
+        /// Check if we can place the object (not occupying used space)
+        /// TODO: mark in a custom material the object to show if it can be put down
+        //if (CanBePlaced(objectToPlace))
+        if (MainTilemap_controller.can_be_placed(objectToPlace))
+        {
+            objectToPlace.Place();
+            Vector3Int start = gridLayout.WorldToCell(objectToPlace.GetStartPosition());
+            //TakeArea(start, objectToPlace.Size);
+            MainTilemap_controller.take_area(objectToPlace, 0);
+
             objectToPlace = null;
         }
+        /// If the space is taken, we destroy the object
+        /// TODO: don't destory the object
+        else
+        {
+            restore_block_placement_mode();
+        }
+    }
+
+    /// If we have a building to be placed and want to cancel the operation
+    public void cancel_placement_or_exit_mode()
+    {
+        /// If there is no 'objectToPlace', then we exit the block construction mode
+        if (objectToPlace == null)
+        {
+            exit_current_construction_mode();
+            return;
+        }
+
+        /// ...and if there is, we only destroy the object
+        Destroy(objectToPlace.gameObject);
+        objectToPlace = null;
     }
 
     /// Make an instance of a prefab and adds some components to drag and place the prefab in the map
@@ -223,44 +255,6 @@ public class BuildingSystem : MonoBehaviour
         //drag.originalOffset = prefab.transform.position;
     }
 
-    /// Takes an object that is being dragged in the map, and checks if it can be placed (space not taken)
-    /// Returns true if the cells in the object area are all empty, and false otherwise
-    private bool CanBePlaced(PlaceableObject placeableObject)
-    {
-        BoundsInt area = new BoundsInt();
-        area.position = gridLayout.WorldToCell(objectToPlace.GetStartPosition());
-        area.size = placeableObject.Size;
-        area.size = new Vector3Int(area.size.x + 1, area.size.y + 1, area.size.z);
-
-        TileBase[] baseArray = GetTilesBlock(area, MainTilemap);
-
-        foreach (var b in baseArray)
-        {
-            if (b == whiteTile)
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /// Mark the area of an object as taken
-    private void TakeArea(Vector3Int start, Vector3Int size)
-    {
-        //MainTilemap.BoxFill(start, whiteTile, start.x, start.y, start.x + size.x, start.y + size.y);
-
-        /// Since BoxFill() doesn't work if a tile inside the box is not empty, we instead set tile by tile
-        for (int i = 0; i <= size.x; ++i)
-        {
-            for (int j = 0; j <= size.y; ++j)
-            {
-                Vector3Int offset = new Vector3Int(i, j, 0);
-                MainTilemap.SetTile(start + offset, whiteTile);
-            }
-        }
-    }
-
     #endregion
 
     #region Zone painting
@@ -268,107 +262,116 @@ public class BuildingSystem : MonoBehaviour
     private Vector3Int initial_painting_spot = Vector3Int.back;
     private Vector3Int final_painting_spot = Vector3Int.back;
 
-    public void zone_painting(bool cancel_operation = false)
+    private void restore_paint_zone_mode()
     {
-        /// Default all variables
-        if (cancel_operation)
-        {
-            initial_painting_spot = Vector3Int.back;
-            final_painting_spot = Vector3Int.back;
-            
-            //selection_tilemap.ClearAllTiles();
-            selection_tilemap.GetComponent<TilemapController>().clear_all_tiles();
+        initial_painting_spot = Vector3Int.back;
+        //final_painting_spot = Vector3Int.back;
 
+        if (painting_zone != null)
+        {
+            StopCoroutine(painting_zone);
+            painting_zone = null;
+        }
+        
+        selection_tilemap.GetComponent<TilemapController>().clear_all_tiles();
+    }
+
+    public void start_paint_zone()
+    {
+        Vector3 mouse_world_position = GetMouseWorldPosition();
+
+        /// If the ray didn't hit the plane surface, dont procede
+        if (mouse_world_position == Vector3.zero)
+        {
+            restore_paint_zone_mode();
             return;
         }
 
-        /// a) Hold down click on the initial painting spot
-        if (Input.GetMouseButtonDown(0))
-        {
-            Vector3 mouse_world_position = GetMouseWorldPosition();
+        initial_painting_spot = gridLayout.WorldToCell(mouse_world_position);
 
-            /// If the ray didn't hit the plane surface, dont procede
-            if (mouse_world_position == Vector3.zero)
+        painting_zone = StartCoroutine(drag_paint_zone());
+    }
+
+    private Coroutine painting_zone;
+    private IEnumerator drag_paint_zone()
+    {
+        while (true)
+        {
+            if (initial_painting_spot == Vector3Int.back)
             {
-                return;
+                restore_paint_zone_mode();
+
+                yield break;
             }
 
-            initial_painting_spot = gridLayout.WorldToCell(mouse_world_position);
-        }
+            select_area_in_tilemap();
 
-        /// b) Drag mouse while click is down to paint an area
-        /// If the initial painting spot is invalid, we do not paint the selection tiles
-        if (initial_painting_spot == Vector3Int.back)
-            return;
-
-        select_area_in_tilemap();
-
-        /// c) Stop pressing on the final painting spot
-        if (Input.GetMouseButtonUp(0))
-        {
-            Vector3 mouse_world_position = GetMouseWorldPosition();
-
-            if (mouse_world_position == Vector3.zero)
-            {
-                initial_painting_spot = Vector3Int.back;
-                return;
-            }
-
-            final_painting_spot = gridLayout.WorldToCell(mouse_world_position);
-
-            /// Make something with the inicial and final spot
-            (Vector3Int start, Vector3Int size) = get_start_and_size_of_corners(initial_painting_spot, final_painting_spot);
-            /// TODO: if there are tiles alredy in the main tile, if we take the area with a BoxFill() some tiles do not
-            /// get marked, so we need to figure a way to mark every tile without problems
-            TakeArea(start, size);
-
-            /// Clear building mode
-            zone_painting(true);
+            yield return new WaitForEndOfFrame();
         }
     }
 
-    /// Returns the start and size of an area between two opposite corners
-    private (Vector3Int start, Vector3Int size) get_start_and_size_of_corners(Vector3Int first_corner, Vector3Int second_corner)
+    public void end_paint_zone()
     {
-        /// Calculate the area between the two corners and then make the sizes positive
-        Vector3Int size = first_corner - second_corner;
-        size.x = Math.Abs(size.x);
-        size.y = Math.Abs(size.y);
-        size.z = Math.Abs(size.z);
-
-        /// Since the size must be always positive, the start must always be the inferior left corner
-        Vector3Int start = new Vector3Int(first_corner.x, first_corner.y, first_corner.z);
-        if (second_corner.x < first_corner.x)
+        if (initial_painting_spot == Vector3Int.back)
         {
-            start.x = second_corner.x;
-        }
-        if (second_corner.y < first_corner.y)
-        {
-            start.y = second_corner.y;
+            restore_paint_zone_mode();
+            return;
         }
 
-        return (start: start, size: size);
+        Vector3 mouse_world_position = GetMouseWorldPosition();
+
+        if (mouse_world_position == Vector3.zero)
+        {
+            restore_paint_zone_mode();
+            return;
+        }
+
+        StopCoroutine(painting_zone);
+        painting_zone = null;
+
+        final_painting_spot = gridLayout.WorldToCell(mouse_world_position);
+
+        if (!MainTilemap_controller.can_be_placed(initial_painting_spot, final_painting_spot))
+        {
+            restore_paint_zone_mode();
+            return;
+        }
+
+        MainTilemap_controller.take_area(initial_painting_spot, final_painting_spot, 0);
+
+        restore_paint_zone_mode();
+    }
+
+    public void cancel_zone_painting_or_exit_mode()
+    {
+        /// Cancel painting if we were in the middle of painting a zone
+        if (initial_painting_spot != Vector3Int.back)
+        {
+            restore_paint_zone_mode();
+            return;
+        }
+
+        /// Exit mode otherwise
+        input_handler.go_to_selection_mode();
     }
 
     private void select_area_in_tilemap()
     {
         /// To mark the selection area, we must first clear the previous selection
-        selection_tilemap.GetComponent<TilemapController>().clear_all_tiles();
+        //selection_tilemap.GetComponent<TilemapController>().clear_all_tiles();
+        selection_tilemap_controller.clear_all_tiles();
 
         /// The current mouse position is where the selection area must end
         Vector3Int current_painting_spot = gridLayout.WorldToCell(GetMouseWorldPosition());
 
-        /// Since we need the start position and the sizes to fill the selection area, we call a function that converts
+        /*/// Since we need the start position and the sizes to fill the selection area, we call a function that converts
         /// two opposite corners
         (Vector3Int start, Vector3Int size) = get_start_and_size_of_corners(initial_painting_spot, current_painting_spot);
 
         /// We fill the selection area in the selection tilemap (not the main tilemap)
-        take_selection_area(start, size);
-    }
+        take_selection_area(start, size);*/
 
-    private void take_selection_area(Vector3Int start, Vector3Int size)
-    {
-        selection_tilemap.BoxFill(start, selection_tile, start.x, start.y, start.x + size.x, start.y + size.y);
+        selection_tilemap_controller.take_area(initial_painting_spot, current_painting_spot, 0);
     }
 
     #endregion
@@ -385,55 +388,108 @@ public class BuildingSystem : MonoBehaviour
     private Road_Direction current_road_direction = Road_Direction.Left;
 
     private Vector3Int initial_road_spot = Vector3Int.back;
-    //private Vector3Int final_road_spot = Vector3Int.back;
 
-    public void road_placement(bool cancel_operation = false)
+    private void restore_road_placement_mode()
     {
-        if (cancel_operation)
+        initial_road_spot = Vector3Int.back;
+
+        if (placing_road != null)
         {
-            initial_road_spot = Vector3Int.back;
+            StopCoroutine(placing_road);
+            placing_road = null;
         }
+    }
+    
+    public void start_road_placement()
+    {
+        Vector3 mouse_world_position = GetMouseWorldPosition();
 
-        /// a) Click on the initial road spot
-        if (Input.GetMouseButtonDown(0))
+        /// If the ray didn't hit the plane surface, dont procede
+        if (mouse_world_position == Vector3.zero)
         {
-            Vector3 mouse_world_position = GetMouseWorldPosition();
-
-            /// If the ray didn't hit the plane surface, dont procede
-            if (mouse_world_position == Vector3.zero)
-            {
-                return;
-            }
-
-            initial_road_spot = gridLayout.WorldToCell(mouse_world_position);
-        }
-
-        /// b) Mirror the road placement (optional)
-        if (initial_road_spot == Vector3Int.back)
+            restore_road_placement_mode();
             return;
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            if (current_road_direction == Road_Direction.Left)
-            {
-                current_road_direction = Road_Direction.Right;
-            }
-            else
-            {
-                current_road_direction = Road_Direction.Left;
-            }
         }
 
-        place_road(current_road_direction, RoadNetwork.Road_Placement_Mode.Temporal);
+        initial_road_spot = gridLayout.WorldToCell(mouse_world_position);
 
-        /// c) Click on the end road spot
-        if (Input.GetMouseButtonUp(0))
+        placing_road = StartCoroutine(drag_road_placement());
+    }
+
+    public void rotate_road()
+    {
+        if (initial_road_spot == Vector3Int.back)
         {
-            place_road(current_road_direction, RoadNetwork.Road_Placement_Mode.Permanent);
-
-            /// Clean the road mode
-            road_placement(true);
+            return;
         }
+
+        if (current_road_direction == Road_Direction.Left)
+        {
+            current_road_direction = Road_Direction.Right;
+        }
+        else
+        {
+            current_road_direction = Road_Direction.Left;
+        }
+    }
+
+    private Coroutine placing_road;
+    private IEnumerator drag_road_placement()
+    {
+        while (true)
+        {
+            if (initial_road_spot == Vector3Int.back)
+            {
+                restore_road_placement_mode();
+                yield break;
+            }
+
+            place_road(current_road_direction, RoadNetwork.Road_Placement_Mode.Temporal);
+
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    public void end_road_placement()
+    {
+        if (initial_road_spot == Vector3Int.back)
+        {
+            restore_road_placement_mode();
+            return;
+        }
+
+        StopCoroutine(placing_road);
+        placing_road = null;
+
+        Vector3Int current_road_spot = gridLayout.WorldToCell(GetMouseWorldPosition());
+
+        Road_Section road_section = new Road_Section(initial_road_spot, current_road_spot, current_road_direction);
+        List<Vector3Int> road_positions = road_section.get_road_tiles();
+
+        if (!MainTilemap_controller.can_be_placed(road_positions))
+        {
+            restore_road_placement_mode();
+            return;
+        }
+
+        road_network.add_roads(road_positions, RoadNetwork.Road_Placement_Mode.Permanent);
+
+        MainTilemap_controller.take_area(road_positions, 0);
+
+        restore_road_placement_mode();
+    }
+
+    public void cancel_road_placement_or_exit_mode()
+    {
+        /// Cancel road placement if we were constructing a road
+        if (initial_road_spot != Vector3Int.back)
+        {
+            restore_road_placement_mode();
+            return;
+        }
+
+        /// Exit mode otherwise
+        input_handler.go_to_selection_mode();
     }
 
     private class Road_Section
@@ -517,14 +573,17 @@ public class BuildingSystem : MonoBehaviour
         }
     }
 
-    private void place_road(Road_Direction direction, RoadNetwork.Road_Placement_Mode placement_mode)
+    private List<Vector3Int> place_road(Road_Direction direction, RoadNetwork.Road_Placement_Mode placement_mode)
     {
         /// The current mouse position is where the selection area must end
         Vector3Int current_road_spot = gridLayout.WorldToCell(GetMouseWorldPosition());
 
         Road_Section road_section = new Road_Section(initial_road_spot, current_road_spot, direction);
+        List<Vector3Int> road_tiles = road_section.get_road_tiles();
 
-        road_network.add_roads(road_section.get_road_tiles(), placement_mode);
+        road_network.add_roads(road_tiles, placement_mode);
+
+        return road_tiles;
     }
 
 

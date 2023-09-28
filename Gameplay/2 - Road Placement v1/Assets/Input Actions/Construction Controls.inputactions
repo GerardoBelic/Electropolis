@@ -47,7 +47,7 @@
                     "name": "",
                     "id": "cb4f79fb-cdbe-4b5f-940e-18b5e2b97574",
                     "path": "<Keyboard>/2",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "K&M",
                     "action": "Block Placement",
@@ -58,7 +58,7 @@
                     "name": "",
                     "id": "0029f2a8-2c7e-46cb-860b-c9a6f8c95256",
                     "path": "<Keyboard>/3",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "K&M",
                     "action": "Zone Painting",
@@ -69,7 +69,7 @@
                     "name": "",
                     "id": "0546acee-67af-4e94-9c0b-ff7ea4582e73",
                     "path": "<Keyboard>/4",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "K&M",
                     "action": "Road Placement",
@@ -80,10 +80,285 @@
                     "name": "",
                     "id": "e83db441-d074-4ee7-840c-0e545cefd690",
                     "path": "<Keyboard>/1",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "K&M",
                     "action": "None Selected",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "1 - Block Placement",
+            "id": "01c6d68a-317b-487b-ad79-9439328b2ff4",
+            "actions": [
+                {
+                    "name": "Select Object A",
+                    "type": "Button",
+                    "id": "89e3317a-7dc5-46f4-91dd-825d82be2e19",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Select Object B",
+                    "type": "Button",
+                    "id": "76ada3f4-0912-4e5a-ad5f-e4c431523044",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Rotate",
+                    "type": "Button",
+                    "id": "3f4658bd-b8c0-40b4-9559-cc4183ca1c77",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Place Object",
+                    "type": "Button",
+                    "id": "f70f5c1c-5dbf-4917-8e5c-18fda7aa40ec",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Cancel Placement / Exit Mode",
+                    "type": "Button",
+                    "id": "e6f36fa1-1bdd-4640-a4f0-0994a4811dc4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "70600f8c-216b-44a0-9602-176d1c5558be",
+                    "path": "<Keyboard>/a",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "Select Object A",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ae6c78a7-f9fb-407e-b594-2eaee204adba",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "Select Object B",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "29a187a2-83e7-4187-af0c-9221b722a710",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "808e9865-b7d4-487a-b9ae-276811f1f0eb",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "Place Object",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a6751cb6-78a5-4487-8937-4f75e16a1549",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "Place Object",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "11a7ae18-b609-4237-b339-3636d02a979d",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "Cancel Placement / Exit Mode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "2 - Zone Painting",
+            "id": "8358d5b8-6845-467e-8008-e03b2975d0fd",
+            "actions": [
+                {
+                    "name": "Start Paint Zone",
+                    "type": "Button",
+                    "id": "ed113228-55c1-402f-bd4f-39c1777a8dec",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "End Paint Zone",
+                    "type": "Button",
+                    "id": "0c924a20-bb33-4e76-973a-cd7f97f1f8ba",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Cancel Placement / Exit Mode",
+                    "type": "Button",
+                    "id": "730c4c32-d475-4dea-ba13-af93d25f8636",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ae0b99dc-bbf6-45cf-8624-ec5f6e4a0be9",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "Start Paint Zone",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3655d0fe-43eb-49ba-ad56-6b01f01fa11b",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Press(behavior=1)",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "End Paint Zone",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "db279564-b494-40f4-a28c-81dac4e9b37e",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "Cancel Placement / Exit Mode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "3 - Road Placement",
+            "id": "5dc9032c-c05a-432a-9e33-2ae24888bf8c",
+            "actions": [
+                {
+                    "name": "Start Road Placement",
+                    "type": "Button",
+                    "id": "e745e926-9d04-40a1-bcd0-c0a43ba0ac3d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "End Road Placement",
+                    "type": "Button",
+                    "id": "e20e499c-795a-44d8-871e-66fa53fb1fc7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Cancel Placement / Exit Mode",
+                    "type": "Button",
+                    "id": "2a917af4-d9dc-462d-8a06-ccd7f3fb554f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Rotate Road",
+                    "type": "Button",
+                    "id": "614c89bd-315e-4632-a704-788d505ec39d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "99850c56-d975-4d76-a6d3-8ff65bf081ce",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "Start Road Placement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a781f163-eb6d-4395-a49f-1cbf7543eafd",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Press(behavior=1)",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "End Road Placement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1c6920b5-c975-43c9-a11a-b0e6e626e02d",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "Cancel Placement / Exit Mode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "02f3da7b-b0d7-45ff-bb29-7f4a33bc8758",
+                    "path": "<Keyboard>/r",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "Rotate Road",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -11,7 +11,7 @@ public class ObjectDrag : MonoBehaviour
     private Vector3 originalOffset;    // la posición de los objetos puede ser ajustada en su prefab, por lo que es necesario conservar la posición original
     private Vector3 offset;
 
-    // Cuando apretamos el mouse, guardamos la distancia que hay entre el centro del objeto y el puntero del ratón en el mundo
+    /*// Cuando apretamos el mouse, guardamos la distancia que hay entre el centro del objeto y el puntero del ratón en el mundo
     private void OnMouseDown()
     {
         offset = transform.position - BuildingSystem.GetMouseWorldPosition();
@@ -26,11 +26,21 @@ public class ObjectDrag : MonoBehaviour
         snapedPos.y = originalOffset.y;
 
         transform.position = snapedPos;
-    }
+    }*/
 
     // Debido a que el centro del objeto no es igual a la posición del prefab, es preferente guardar esta última para que los objetos no se metan debajo del suelo
-    private void Awake()
+    void Awake()
     {
         originalOffset = transform.position;
+    }
+
+    void Update()
+    {
+        Vector3 pos = BuildingSystem.GetMouseWorldPosition();
+
+        Vector3 snapedPos = BuildingSystem.current.SnapCoordinateToGrid(pos);
+        snapedPos.y = originalOffset.y;
+
+        transform.position = snapedPos;
     }
 }

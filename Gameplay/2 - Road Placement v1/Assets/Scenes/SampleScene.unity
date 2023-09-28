@@ -123,6 +123,53 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &265355815
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 265355817}
+  - component: {fileID: 265355816}
+  m_Layer: 0
+  m_Name: CameraPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &265355816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265355815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df2d7d26f79cc164dbbd76b977e727b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 60
+  pixels_from_border: 200
+--- !u!4 &265355817
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265355815}
+  m_LocalRotation: {x: 0, y: 0.38268343, z: 0, w: 0.92387956}
+  m_LocalPosition: {x: -79.2, y: 64.2, z: -80}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 330585546}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 45, z: 0}
 --- !u!1 &291120790
 GameObject:
   m_ObjectHideFlags: 0
@@ -256,6 +303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e8b2475a27c23f47b44a7b6b8efb37f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridLayout: {fileID: 973598879}
   palette:
   - {fileID: 11400000, guid: 097570f426dfacf4b86a2fa7873a7a31, type: 2}
   - {fileID: 11400000, guid: 737597f742bffd446b0de945bb58f542, type: 2}
@@ -348,13 +396,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_LocalRotation: {x: -0.23911765, y: -0.3696438, z: 0.09904577, w: -0.89239913}
-  m_LocalPosition: {x: -79.2, y: 64.2, z: -80}
+  m_LocalRotation: {x: -0.2588191, y: -0, z: -0, w: -0.9659259}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_Father: {fileID: 265355817}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 30, y: 405, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
@@ -869,6 +917,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e8b2475a27c23f47b44a7b6b8efb37f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridLayout: {fileID: 973598879}
   palette:
   - {fileID: 11400000, guid: 125230e2b165dce4ea69a137b45369b3, type: 2}
   upperCorner: {x: 9, y: 9, z: 0}
@@ -997,11 +1046,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridLayout: {fileID: 973598879}
   MainTilemap: {fileID: 850901237}
+  MainTilemap_controller: {fileID: 850901238}
   whiteTile: {fileID: 11400000, guid: 125230e2b165dce4ea69a137b45369b3, type: 2}
   selection_tilemap: {fileID: 291120793}
+  selection_tilemap_controller: {fileID: 291120794}
   selection_tile: {fileID: 11400000, guid: 737597f742bffd446b0de945bb58f542, type: 2}
   prefab1: {fileID: 8379621403687642905, guid: f83fabff0551d02429d81b111101a826, type: 3}
   prefab2: {fileID: 3951785090675783912, guid: 1dde4933f41dc344e963d586b6c42e57, type: 3}
+  input_handler: {fileID: 1921053015}
   road_network: {fileID: 1938495499}
 --- !u!1 &1787092090
 GameObject:
@@ -1092,7 +1144,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1921053012}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -16.232569, y: -27.20642, z: -9.047359}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1113,7 +1165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 49be298a25d87fa43bf31f1282e4f7fa,
     type: 3}
-  m_NotificationBehavior: 0
+  m_NotificationBehavior: 3
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -1126,17 +1178,163 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1921053015}
+        m_TargetAssemblyTypeName: PlayerInputHandler, Assembly-CSharp
+        m_MethodName: switch_to_block_placement_mode
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 662c872f-5325-454f-a251-991efdecd622
     m_ActionName: Select Construction Mode/1 - Block Placement[/Keyboard/1]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1921053015}
+        m_TargetAssemblyTypeName: PlayerInputHandler, Assembly-CSharp
+        m_MethodName: switch_to_zone_painting_mode
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: d9b784d0-5e2e-4881-9c99-564c81623637
     m_ActionName: Select Construction Mode/2 - Zone Painting[/Keyboard/2]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1921053015}
+        m_TargetAssemblyTypeName: PlayerInputHandler, Assembly-CSharp
+        m_MethodName: switch_to_road_placement_mode
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: ea36d6de-a90c-49d8-9db2-f4f675991431
     m_ActionName: Select Construction Mode/3 - Road Placement[/Keyboard/3]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 3b6f4c14-0dca-46e2-b801-04149a52fb9c
+    m_ActionName: Select Construction Mode/None Selected[/Keyboard/1]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 973598881}
+        m_TargetAssemblyTypeName: BuildingSystem, Assembly-CSharp
+        m_MethodName: select_object_to_place
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8379621403687642905, guid: f83fabff0551d02429d81b111101a826,
+            type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 89e3317a-7dc5-46f4-91dd-825d82be2e19
+    m_ActionName: 1 - Block Placement/Select Object A[/Keyboard/a]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 973598881}
+        m_TargetAssemblyTypeName: BuildingSystem, Assembly-CSharp
+        m_MethodName: select_object_to_place
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 3951785090675783912, guid: 1dde4933f41dc344e963d586b6c42e57,
+            type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 76ada3f4-0912-4e5a-ad5f-e4c431523044
+    m_ActionName: 1 - Block Placement/Select Object B[/Keyboard/b]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 973598881}
+        m_TargetAssemblyTypeName: BuildingSystem, Assembly-CSharp
+        m_MethodName: rotate_object
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 3f4658bd-b8c0-40b4-9559-cc4183ca1c77
+    m_ActionName: 1 - Block Placement/Rotate[/Keyboard/r]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 973598881}
+        m_TargetAssemblyTypeName: BuildingSystem, Assembly-CSharp
+        m_MethodName: place_object
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: f70f5c1c-5dbf-4917-8e5c-18fda7aa40ec
+    m_ActionName: 1 - Block Placement/Place Object[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 973598881}
+        m_TargetAssemblyTypeName: BuildingSystem, Assembly-CSharp
+        m_MethodName: cancel_placement_or_exit_mode
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e6f36fa1-1bdd-4640-a4f0-0994a4811dc4
+    m_ActionName: 1 - Block Placement/Cancel Placement[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ed113228-55c1-402f-bd4f-39c1777a8dec
+    m_ActionName: 2 - Zone Painting/Start Paint Zone[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0c924a20-bb33-4e76-973a-cd7f97f1f8ba
+    m_ActionName: 2 - Zone Painting/End Paint Zone[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e745e926-9d04-40a1-bcd0-c0a43ba0ac3d
+    m_ActionName: 3 - Road Placement/Start Road Placement[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e20e499c-795a-44d8-871e-66fa53fb1fc7
+    m_ActionName: 3 - Road Placement/End Road Placement[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 730c4c32-d475-4dea-ba13-af93d25f8636
+    m_ActionName: 2 - Zone Painting/Cancel Placement / Exit Mode[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2a917af4-d9dc-462d-8a06-ccd7f3fb554f
+    m_ActionName: 3 - Road Placement/Cancel Placement / Exit Mode[/Keyboard/escape]
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: K&M
   m_DefaultActionMap: Select Construction Mode
@@ -1154,6 +1352,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b423f1c9de56e4ca98701e6bef30a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  input: {fileID: 1921053014}
+  building_system: {fileID: 973598881}
 --- !u!1 &1938414516
 GameObject:
   m_ObjectHideFlags: 0
